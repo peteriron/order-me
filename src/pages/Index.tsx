@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { DrinkOrder } from "@/components/DrinkOrder";
+import { DrinkOrder, defaultDrinks, DrinkItem } from "@/components/DrinkOrder";
 import { OrderSummary } from "@/components/OrderSummary";
 import { OrderHistory } from "@/components/OrderHistory";
 import { useToast } from "@/hooks/use-toast";
@@ -18,7 +18,33 @@ const Index = () => {
   const [currentOrder, setCurrentOrder] = useState<Order>({});
   const [showSummary, setShowSummary] = useState(false);
   const [orderHistory, setOrderHistory] = useState<CompletedOrder[]>([]);
+  const [drinks, setDrinks] = useState<DrinkItem[]>([]);
   const { toast } = useToast();
+
+  // Load custom drinks
+  useEffect(() => {
+    const customDrinks = localStorage.getItem("customDrinks");
+    if (customDrinks) {
+      const parsed = JSON.parse(customDrinks);
+      setDrinks([...defaultDrinks, ...parsed]);
+    } else {
+      setDrinks(defaultDrinks);
+    }
+
+    // Listen for changes to custom drinks
+    const handleStorageChange = () => {
+      const customDrinks = localStorage.getItem("customDrinks");
+      if (customDrinks) {
+        const parsed = JSON.parse(customDrinks);
+        setDrinks([...defaultDrinks, ...parsed]);
+      } else {
+        setDrinks(defaultDrinks);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   // Load order history from localStorage
   useEffect(() => {
@@ -104,6 +130,7 @@ const Index = () => {
       {!showSummary ? (
         <DrinkOrder
           currentOrder={currentOrder}
+          drinks={drinks}
           onAddDrink={addDrink}
           onDecreaseDrink={decreaseDrink}
           onSwipeRight={handleSwipeRight}

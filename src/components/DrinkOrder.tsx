@@ -1,13 +1,22 @@
-import { Beer, Coffee, Milk, Wine, Droplets, Grape, Apple, Cherry, CheckCircle, RotateCcw, Minus, Plus, Martini, Flame, Sparkles, GlassWater, Sun, Soup, IceCream, Flower } from "lucide-react";
+import { Beer, Coffee, Milk, Wine, Droplets, Grape, Apple, Cherry, CheckCircle, RotateCcw, Minus, Plus, Martini, Flame, Sparkles, GlassWater, Sun, Soup, IceCream, Flower, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Order, CompletedOrder } from "@/pages/Index";
 import { OrderHistory } from "@/components/OrderHistory";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import * as Icons from "lucide-react";
+
+export interface DrinkItem {
+  name: string;
+  icon: string;
+  color: string;
+}
 
 interface DrinkOrderProps {
   currentOrder: Order;
+  drinks: DrinkItem[];
   onAddDrink: (drink: string) => void;
   onDecreaseDrink: (drink: string) => void;
   onSwipeRight: () => void;
@@ -16,28 +25,29 @@ interface DrinkOrderProps {
   orderHistory: CompletedOrder[];
 }
 
-const drinks = [
-  { name: "Beer", icon: Beer, color: "text-amber-500" },
-  { name: "Wine", icon: Wine, color: "text-red-500" },
-  { name: "Coffee", icon: Coffee, color: "text-orange-800" },
-  { name: "Water", icon: Droplets, color: "text-blue-500" },
-  { name: "Juice", icon: Grape, color: "text-purple-500" },
-  { name: "Soda", icon: Apple, color: "text-green-500" },
-  { name: "Milk", icon: Milk, color: "text-slate-100" },
-  { name: "Cocktail", icon: Cherry, color: "text-pink-500" },
-  { name: "Whiskey", icon: Flame, color: "text-orange-600" },
-  { name: "Vodka", icon: Sparkles, color: "text-cyan-400" },
-  { name: "Rum", icon: GlassWater, color: "text-yellow-700" },
-  { name: "Gin", icon: Flower, color: "text-emerald-400" },
-  { name: "Martini", icon: Martini, color: "text-lime-500" },
-  { name: "Tequila", icon: Sun, color: "text-amber-400" },
-  { name: "Tea", icon: Soup, color: "text-green-700" },
-  { name: "Smoothie", icon: IceCream, color: "text-fuchsia-500" },
-  { name: "Lemonade", icon: Sun, color: "text-yellow-400" },
-  { name: "Mojito", icon: Flower, color: "text-teal-400" },
+export const defaultDrinks: DrinkItem[] = [
+  { name: "Beer", icon: "Beer", color: "text-amber-500" },
+  { name: "Wine", icon: "Wine", color: "text-red-500" },
+  { name: "Coffee", icon: "Coffee", color: "text-orange-800" },
+  { name: "Water", icon: "Droplets", color: "text-blue-500" },
+  { name: "Juice", icon: "Grape", color: "text-purple-500" },
+  { name: "Soda", icon: "Apple", color: "text-green-500" },
+  { name: "Milk", icon: "Milk", color: "text-slate-100" },
+  { name: "Cocktail", icon: "Cherry", color: "text-pink-500" },
+  { name: "Whiskey", icon: "Flame", color: "text-orange-600" },
+  { name: "Vodka", icon: "Sparkles", color: "text-cyan-400" },
+  { name: "Rum", icon: "GlassWater", color: "text-yellow-700" },
+  { name: "Gin", icon: "Flower", color: "text-emerald-400" },
+  { name: "Martini", icon: "Martini", color: "text-lime-500" },
+  { name: "Tequila", icon: "Sun", color: "text-amber-400" },
+  { name: "Tea", icon: "Soup", color: "text-green-700" },
+  { name: "Smoothie", icon: "IceCream", color: "text-fuchsia-500" },
+  { name: "Lemonade", icon: "Sun", color: "text-yellow-400" },
+  { name: "Mojito", icon: "Flower", color: "text-teal-400" },
 ];
 
-export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeRight, onReset, onSubmit, orderHistory }: DrinkOrderProps) => {
+export const DrinkOrder = ({ currentOrder, drinks, onAddDrink, onDecreaseDrink, onSwipeRight, onReset, onSubmit, orderHistory }: DrinkOrderProps) => {
+  const navigate = useNavigate();
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -60,6 +70,11 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
 
   const totalItems = Object.values(currentOrder).reduce((sum, count) => sum + count, 0);
 
+  const renderIcon = (iconName: string, className: string) => {
+    const IconComponent = (Icons as any)[iconName];
+    return IconComponent ? <IconComponent className={className} strokeWidth={1.5} /> : null;
+  };
+
   return (
     <div 
       className="min-h-screen p-6 pb-24"
@@ -69,7 +84,7 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-1">Drink Orders</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-1">This round is for me</h1>
             <p 
               className="text-sm text-muted-foreground cursor-pointer hover:text-primary transition-colors"
               onClick={onSwipeRight}
@@ -88,13 +103,12 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
         </div>
 
         <div className="grid grid-cols-3 gap-2 mb-6">
-          {drinks.map((drink) => {
-            const Icon = drink.icon;
+          {drinks.map((drink, index) => {
             const count = currentOrder[drink.name] || 0;
             
             return (
               <Card
-                key={drink.name}
+                key={`${drink.name}-${index}`}
                 className="relative overflow-hidden transition-all duration-200 hover:shadow-lg border-2"
               >
                 <div className="p-2 flex flex-col items-center gap-2">
@@ -103,7 +117,7 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
                     onClick={() => onAddDrink(drink.name)}
                   >
                     <div className="relative">
-                      <Icon className={`w-6 h-6 ${drink.color}`} strokeWidth={1.5} />
+                      {renderIcon(drink.icon, `w-6 h-6 ${drink.color}`)}
                       {count > 0 && (
                         <Badge 
                           className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center bg-secondary text-secondary-foreground animate-bounce-in text-[10px]"
@@ -168,13 +182,24 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
           </div>
         )}
 
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={() => setShowHistory(!showHistory)}
-        >
-          {showHistory ? "Hide" : "View"} Order History ({orderHistory.length})
-        </Button>
+        <div className="space-y-2">
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => navigate("/manage-drinks")}
+          >
+            <Settings className="mr-2 h-4 w-4" />
+            Manage Drinks
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => setShowHistory(!showHistory)}
+          >
+            {showHistory ? "Hide" : "View"} Order History ({orderHistory.length})
+          </Button>
+        </div>
 
         {showHistory && (
           <div className="mt-6 animate-scale-in">
