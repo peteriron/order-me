@@ -124,7 +124,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+    <div className="min-h-screen">
       {!showSummary ? (
         <DrinkOrder
           currentOrder={currentOrder}
