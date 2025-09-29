@@ -21,24 +21,22 @@ const Index = () => {
   const [drinks, setDrinks] = useState<DrinkItem[]>([]);
   const { toast } = useToast();
 
-  // Load custom drinks
+  // Load drinks from localStorage or initialize with defaults
   useEffect(() => {
-    const customDrinks = localStorage.getItem("customDrinks");
-    if (customDrinks) {
-      const parsed = JSON.parse(customDrinks);
-      setDrinks([...defaultDrinks, ...parsed]);
+    const storedDrinks = localStorage.getItem("allDrinks");
+    if (storedDrinks) {
+      setDrinks(JSON.parse(storedDrinks));
     } else {
+      // Initialize with default drinks
+      localStorage.setItem("allDrinks", JSON.stringify(defaultDrinks));
       setDrinks(defaultDrinks);
     }
 
-    // Listen for changes to custom drinks
+    // Listen for changes to drinks
     const handleStorageChange = () => {
-      const customDrinks = localStorage.getItem("customDrinks");
-      if (customDrinks) {
-        const parsed = JSON.parse(customDrinks);
-        setDrinks([...defaultDrinks, ...parsed]);
-      } else {
-        setDrinks(defaultDrinks);
+      const storedDrinks = localStorage.getItem("allDrinks");
+      if (storedDrinks) {
+        setDrinks(JSON.parse(storedDrinks));
       }
     };
 
