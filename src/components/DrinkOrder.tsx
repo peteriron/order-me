@@ -67,11 +67,11 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
       onTouchEnd={handleTouchEnd}
     >
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">Drink Orders</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-1">Drink Orders</h1>
             <p 
-              className="text-muted-foreground cursor-pointer hover:text-primary transition-colors"
+              className="text-sm text-muted-foreground cursor-pointer hover:text-primary transition-colors"
               onClick={onSwipeRight}
             >
               Tap here to review order →
@@ -79,7 +79,7 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
           </div>
           {totalItems > 0 && (
             <Badge 
-              className="text-lg px-4 py-2 bg-primary text-primary-foreground cursor-pointer hover:opacity-90 transition-opacity"
+              className="text-base px-3 py-1.5 bg-primary text-primary-foreground cursor-pointer hover:opacity-90 transition-opacity"
               onClick={onSwipeRight}
             >
               {totalItems} items
@@ -87,7 +87,7 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
           )}
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-3 gap-2 mb-6">
           {drinks.map((drink) => {
             const Icon = drink.icon;
             const count = currentOrder[drink.name] || 0;
@@ -97,48 +97,50 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
                 key={drink.name}
                 className="relative overflow-hidden transition-all duration-200 hover:shadow-lg border-2"
               >
-                <div className="p-4 flex items-center justify-between gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10 shrink-0 rounded-full"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDecreaseDrink(drink.name);
-                    }}
-                    disabled={count === 0}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-
+                <div className="p-2 flex flex-col items-center gap-2">
                   <div 
-                    className="flex flex-col items-center justify-center space-y-2 flex-1 cursor-pointer active:scale-95 transition-transform"
+                    className="flex flex-col items-center justify-center space-y-1 flex-1 cursor-pointer active:scale-95 transition-transform w-full"
                     onClick={() => onAddDrink(drink.name)}
                   >
                     <div className="relative">
-                      <Icon className={`w-10 h-10 ${drink.color}`} strokeWidth={1.5} />
+                      <Icon className={`w-6 h-6 ${drink.color}`} strokeWidth={1.5} />
                       {count > 0 && (
                         <Badge 
-                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center bg-secondary text-secondary-foreground animate-bounce-in text-xs"
+                          className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center bg-secondary text-secondary-foreground animate-bounce-in text-[10px]"
                         >
                           {count}
                         </Badge>
                       )}
                     </div>
-                    <span className="text-sm font-semibold text-foreground text-center">{drink.name}</span>
+                    <span className="text-xs font-semibold text-foreground text-center leading-tight">{drink.name}</span>
                   </div>
 
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10 shrink-0 rounded-full bg-primary/10 hover:bg-primary/20"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onAddDrink(drink.name);
-                    }}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center justify-center gap-1 w-full">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-6 w-6 shrink-0 rounded-full"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDecreaseDrink(drink.name);
+                      }}
+                      disabled={count === 0}
+                    >
+                      <Minus className="h-3 w-3" />
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-6 w-6 shrink-0 rounded-full bg-primary/10 hover:bg-primary/20"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onAddDrink(drink.name);
+                      }}
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </div>
               </Card>
             );
@@ -146,21 +148,21 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
         </div>
 
         {totalItems > 0 && (
-          <div className="space-y-3 mb-6">
+          <div className="space-y-2 mb-4">
             <Button
-              className="w-full h-14 text-lg"
+              className="w-full h-12 text-base"
               onClick={onSubmit}
             >
-              <CheckCircle className="mr-2 h-5 w-5" />
+              <CheckCircle className="mr-2 h-4 w-4" />
               Submit Order
             </Button>
             
             <Button
               variant="outline"
-              className="w-full h-14 text-lg"
+              className="w-full h-12 text-base"
               onClick={onReset}
             >
-              <RotateCcw className="mr-2 h-5 w-5" />
+              <RotateCcw className="mr-2 h-4 w-4" />
               Reset Order
             </Button>
           </div>
