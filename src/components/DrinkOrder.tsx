@@ -1,4 +1,4 @@
-import { Beer, Coffee, Milk, Wine, Droplets, Grape, Apple, Cherry, CheckCircle, RotateCcw } from "lucide-react";
+import { Beer, Coffee, Milk, Wine, Droplets, Grape, Apple, Cherry, CheckCircle, RotateCcw, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { useState } from "react";
 interface DrinkOrderProps {
   currentOrder: Order;
   onAddDrink: (drink: string) => void;
+  onDecreaseDrink: (drink: string) => void;
   onSwipeRight: () => void;
   onReset: () => void;
   onSubmit: () => void;
@@ -26,7 +27,7 @@ const drinks = [
   { name: "Cocktail", icon: Cherry, color: "text-pink-500" },
 ];
 
-export const DrinkOrder = ({ currentOrder, onAddDrink, onSwipeRight, onReset, onSubmit, orderHistory }: DrinkOrderProps) => {
+export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeRight, onReset, onSubmit, orderHistory }: DrinkOrderProps) => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -84,21 +85,50 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onSwipeRight, onReset, on
             return (
               <Card
                 key={drink.name}
-                className="relative overflow-hidden transition-all duration-200 hover:shadow-lg active:scale-95 cursor-pointer border-2"
-                onClick={() => onAddDrink(drink.name)}
+                className="relative overflow-hidden transition-all duration-200 hover:shadow-lg border-2"
               >
-                <div className="p-6 flex flex-col items-center justify-center space-y-3">
-                  <div className="relative">
-                    <Icon className={`w-12 h-12 ${drink.color}`} strokeWidth={1.5} />
-                    {count > 0 && (
-                      <Badge 
-                        className="absolute -top-2 -right-2 h-7 w-7 rounded-full p-0 flex items-center justify-center bg-secondary text-secondary-foreground animate-bounce-in"
-                      >
-                        {count}
-                      </Badge>
-                    )}
+                <div className="p-4 flex items-center justify-between gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 shrink-0 rounded-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDecreaseDrink(drink.name);
+                    }}
+                    disabled={count === 0}
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+
+                  <div 
+                    className="flex flex-col items-center justify-center space-y-2 flex-1 cursor-pointer active:scale-95 transition-transform"
+                    onClick={() => onAddDrink(drink.name)}
+                  >
+                    <div className="relative">
+                      <Icon className={`w-10 h-10 ${drink.color}`} strokeWidth={1.5} />
+                      {count > 0 && (
+                        <Badge 
+                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center bg-secondary text-secondary-foreground animate-bounce-in text-xs"
+                        >
+                          {count}
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="text-sm font-semibold text-foreground text-center">{drink.name}</span>
                   </div>
-                  <span className="text-lg font-semibold text-foreground">{drink.name}</span>
+
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 shrink-0 rounded-full bg-primary/10 hover:bg-primary/20"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddDrink(drink.name);
+                    }}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
               </Card>
             );

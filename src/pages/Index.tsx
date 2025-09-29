@@ -44,6 +44,20 @@ const Index = () => {
     }));
   };
 
+  const decreaseDrink = (drink: string) => {
+    setCurrentOrder((prev) => {
+      const currentCount = prev[drink] || 0;
+      if (currentCount <= 1) {
+        const { [drink]: _, ...rest } = prev;
+        return rest;
+      }
+      return {
+        ...prev,
+        [drink]: currentCount - 1,
+      };
+    });
+  };
+
   const resetOrder = () => {
     setCurrentOrder({});
     setShowSummary(false);
@@ -91,6 +105,7 @@ const Index = () => {
         <DrinkOrder
           currentOrder={currentOrder}
           onAddDrink={addDrink}
+          onDecreaseDrink={decreaseDrink}
           onSwipeRight={handleSwipeRight}
           onReset={resetOrder}
           onSubmit={completeOrder}
