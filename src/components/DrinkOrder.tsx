@@ -1,4 +1,4 @@
-import { Beer, Coffee, Milk, Wine, Droplets, Grape, Apple, Cherry } from "lucide-react";
+import { Beer, Coffee, Milk, Wine, Droplets, Grape, Apple, Cherry, CheckCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -10,6 +10,8 @@ interface DrinkOrderProps {
   currentOrder: Order;
   onAddDrink: (drink: string) => void;
   onSwipeRight: () => void;
+  onReset: () => void;
+  onSubmit: () => void;
   orderHistory: CompletedOrder[];
 }
 
@@ -24,7 +26,7 @@ const drinks = [
   { name: "Cocktail", icon: Cherry, color: "text-pink-500" },
 ];
 
-export const DrinkOrder = ({ currentOrder, onAddDrink, onSwipeRight, orderHistory }: DrinkOrderProps) => {
+export const DrinkOrder = ({ currentOrder, onAddDrink, onSwipeRight, onReset, onSubmit, orderHistory }: DrinkOrderProps) => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -57,10 +59,18 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onSwipeRight, orderHistor
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-foreground mb-2">Drink Orders</h1>
-            <p className="text-muted-foreground">Tap drinks, swipe right to review →</p>
+            <p 
+              className="text-muted-foreground cursor-pointer hover:text-primary transition-colors"
+              onClick={onSwipeRight}
+            >
+              Tap here to review order →
+            </p>
           </div>
           {totalItems > 0 && (
-            <Badge className="text-lg px-4 py-2 bg-primary text-primary-foreground">
+            <Badge 
+              className="text-lg px-4 py-2 bg-primary text-primary-foreground cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={onSwipeRight}
+            >
               {totalItems} items
             </Badge>
           )}
@@ -94,6 +104,27 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onSwipeRight, orderHistor
             );
           })}
         </div>
+
+        {totalItems > 0 && (
+          <div className="space-y-3 mb-6">
+            <Button
+              className="w-full h-14 text-lg"
+              onClick={onSubmit}
+            >
+              <CheckCircle className="mr-2 h-5 w-5" />
+              Submit Order
+            </Button>
+            
+            <Button
+              variant="outline"
+              className="w-full h-14 text-lg"
+              onClick={onReset}
+            >
+              <RotateCcw className="mr-2 h-5 w-5" />
+              Reset Order
+            </Button>
+          </div>
+        )}
 
         <Button
           variant="outline"

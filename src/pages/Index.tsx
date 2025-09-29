@@ -92,6 +92,8 @@ const Index = () => {
           currentOrder={currentOrder}
           onAddDrink={addDrink}
           onSwipeRight={handleSwipeRight}
+          onReset={resetOrder}
+          onSubmit={completeOrder}
           orderHistory={orderHistory}
         />
       ) : (
