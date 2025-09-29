@@ -1,4 +1,4 @@
-import { Beer, Coffee, Milk, Wine, Droplets, Grape, Apple, Cherry, CheckCircle, RotateCcw, Minus, Plus } from "lucide-react";
+import { Beer, Coffee, Milk, Wine, Droplets, Grape, Apple, Cherry, CheckCircle, RotateCcw, Minus, Plus, Martini, Flame, Sparkles, GlassWater, Sun, Soup, IceCream, Flower } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -25,6 +25,16 @@ const drinks = [
   { name: "Soda", icon: Apple, color: "text-green-500" },
   { name: "Milk", icon: Milk, color: "text-slate-100" },
   { name: "Cocktail", icon: Cherry, color: "text-pink-500" },
+  { name: "Whiskey", icon: Flame, color: "text-orange-600" },
+  { name: "Vodka", icon: Sparkles, color: "text-cyan-400" },
+  { name: "Rum", icon: GlassWater, color: "text-yellow-700" },
+  { name: "Gin", icon: Flower, color: "text-emerald-400" },
+  { name: "Martini", icon: Martini, color: "text-lime-500" },
+  { name: "Tequila", icon: Sun, color: "text-amber-400" },
+  { name: "Tea", icon: Soup, color: "text-green-700" },
+  { name: "Smoothie", icon: IceCream, color: "text-fuchsia-500" },
+  { name: "Lemonade", icon: Sun, color: "text-yellow-400" },
+  { name: "Mojito", icon: Flower, color: "text-teal-400" },
 ];
 
 export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeRight, onReset, onSubmit, orderHistory }: DrinkOrderProps) => {
@@ -77,7 +87,7 @@ export const DrinkOrder = ({ currentOrder, onAddDrink, onDecreaseDrink, onSwipeR
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-3 mb-6">
           {drinks.map((drink) => {
             const Icon = drink.icon;
             const count = currentOrder[drink.name] || 0;
